@@ -13,44 +13,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function CreateNewPostPage() {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [summary, setSummary] = useState("");
+  const [postContent, setPostContent] = useState("");
 
   const publishedAt = new Date();
-  const content = [
-    {
-      markDefs: [],
-      style: "normal",
-      _key: "1",
-      _type: "block",
-      children: [
-        { _type: "span", text: "This is the content of the blog post." },
-      ],
-    },
-    {
-      markDefs: [],
-      style: "normal",
-      _key: "2",
-      _type: "block",
-      children: [
-        { _type: "span", text: "This is the content of the blog post." },
-      ],
-    },
-  ];
+  // const content = [
+  //   {
+  //     markDefs: [],
+  //     style: "normal",
+  //     _key: "1",
+  //     _type: "block",
+  //     children: [{ _type: "span", text: postContent }],
+  //   },
+  // ];
 
   async function handleCreatePostClick() {
-    console.log("click");
-
-    await axios.post("/api/create-post", {
+    const response = await axios.post("/api/create-post", {
       title,
       subtitle,
       summary,
       publishedAt,
-      content,
+      content: postContent,
     });
+    console.log(response.data);
   }
   return (
     <main className="max-w-7xl mx-auto py-20 flex flex-col gap-10">
@@ -62,7 +52,7 @@ export default function CreateNewPostPage() {
             Your post will be automatically published to Sanity
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col gap-10">
           <div className="flex gap-10">
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label htmlFor="post-title">Post title</Label>
@@ -92,9 +82,22 @@ export default function CreateNewPostPage() {
               />
             </div>
           </div>
+          <div className="grid w-full  items-center gap-1.5">
+            <Label htmlFor="post-content">Post content</Label>
+            <Textarea
+              rows={10}
+              onChange={(e) => setPostContent(e.target.value)}
+              id="post-content"
+              placeholder="My post content"
+            />
+          </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={() => handleCreatePostClick()} variant="outline">
+          <Button
+            disabled={!title || !subtitle || !summary || !postContent}
+            onClick={() => handleCreatePostClick()}
+            variant="outline"
+          >
             Create post
           </Button>
         </CardFooter>

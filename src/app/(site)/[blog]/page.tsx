@@ -18,8 +18,6 @@ export default async function AllBlogPostsPage() {
     tags: ["blogPost"],
   });
 
-  console.log(data);
-
   return (
     <main className="max-w-7xl flex flex-col mx-auto gap-10 py-20">
       <h1 className="text-center text-5xl">All Blog posts</h1>

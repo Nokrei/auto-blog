@@ -16,7 +16,6 @@ export default async function BlogPostPage({ params }: PropsType) {
     tags: ["blogPost"],
     params,
   });
-  console.log(data);
 
   return (
     <main className="max-w-7xl mx-auto flex flex-col gap-20 py-20">
