@@ -1,6 +1,7 @@
 import "../globals.css";
 import { Navigation } from "./_components/navigation/Navigation";
 import { Toaster } from "@/components/ui/sonner";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata = {
   title: "Auto Blog",
@@ -13,14 +14,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <Navigation />
-        <>
-          {children}
-          <Toaster className="bg-background" />
-        </>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          <Navigation />
+          <>
+            {children}
+            <Toaster className="bg-background" />
+          </>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
