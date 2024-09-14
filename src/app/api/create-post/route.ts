@@ -1,9 +1,31 @@
 import { generateBlogPost } from "@/lib/generateContent";
 import { sanityCreate } from "@/sanity/lib/sanityCreate";
+import { currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   const request = await req.json();
-  const { title, subtitle, summary, publishedAt, content } = request;
+  const {
+    title,
+    subtitle,
+    summary,
+    publishedAt,
+    content,
+    userId,
+    userIsAdmin,
+  } = request;
+
+  const user = await currentUser();
+  if (!user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  const currentUserId = user.id;
+  if (currentUserId !== userId) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  if (!userIsAdmin) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   const aiGeneratedContent = await generateBlogPost(content);
 
   const richTextContent = [
