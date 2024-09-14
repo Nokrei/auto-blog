@@ -6,8 +6,8 @@ export default defineConfig({
   name: "auto-blog-studio",
   title: "auto-blog-studio",
 
-  projectId: "4dvi0604",
-  dataset: "production",
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   basePath: "/studio",
   plugins: [structureTool()],
 
