@@ -5,7 +5,7 @@ export const allBlogPostsQuery = groq`
     _id,
     title,
     subtitle,
-    slug,
+    "slug":slug.current,
     publishedAt,
     excerpt,
   }

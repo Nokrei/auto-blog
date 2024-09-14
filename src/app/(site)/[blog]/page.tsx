@@ -1,19 +1,24 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { allBlogPostsQuery } from "@/sanity/lib/queries";
 import { sanityFetch } from "@/sanity/lib/sanityFetch";
 import { BlogPostType } from "@/types/BlogPostType";
+import Link from "next/link";
 
 export default async function AllBlogPostsPage() {
   const data = await sanityFetch<BlogPostType[]>({
     query: allBlogPostsQuery,
     tags: ["blogPost"],
   });
+
+  console.log(data);
 
   return (
     <main className="max-w-7xl flex flex-col mx-auto gap-10 py-20">
@@ -26,6 +31,11 @@ export default async function AllBlogPostsPage() {
               <CardDescription>{post.subtitle}</CardDescription>
             </CardHeader>
             <CardContent>{post.excerpt}</CardContent>
+            <CardFooter>
+              <Link href={`/blog/${post.slug}`}>
+                <Button variant="outline">Read more</Button>
+              </Link>
+            </CardFooter>
           </Card>
         ))}
       </div>
