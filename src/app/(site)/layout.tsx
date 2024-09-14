@@ -2,6 +2,7 @@ import "../globals.css";
 import { Navigation } from "./_components/navigation/Navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "./_components/themeProvider/themreProvider";
 
 export const metadata = {
   title: "Auto Blog",
@@ -17,11 +18,18 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
-          <Navigation />
-          <>
-            {children}
-            <Toaster className="bg-background" />
-          </>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navigation />
+            <>
+              {children}
+              <Toaster />
+            </>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

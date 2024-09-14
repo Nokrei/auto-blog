@@ -14,6 +14,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import ThemeSwitcher from "../themeSwitcher/ThemeSwitcher";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -38,7 +39,7 @@ const components: { title: string; href: string; description: string }[] = [
 export function Navigation() {
   return (
     <div className="flex z-50 items-center px-5 fixed w-full bg-gradient-to-b from-zinc-900 to-transparent">
-      <NavigationMenu className="mx-auto bg-zinc-900 rounded-xl my-5 bg-primary text-secondary">
+      <NavigationMenu className="mx-auto rounded-xl my-5 md:ps-36">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
@@ -97,7 +98,8 @@ export function Navigation() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <div>
+      <div className="flex gap-5 w-36">
+        <ThemeSwitcher />
         <SignedOut>
           <SignInButton />
         </SignedOut>
