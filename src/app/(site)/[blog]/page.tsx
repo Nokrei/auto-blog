@@ -23,14 +23,22 @@ export default async function AllBlogPostsPage() {
   return (
     <main className="max-w-7xl flex flex-col mx-auto gap-10 py-20">
       <h1 className="text-center text-5xl">All Blog posts</h1>
-      <div>
+      <div className="flex justify-center">
+        <Link href="/blog/create-new-post">
+          <Button variant="outline">Create new</Button>
+        </Link>
+      </div>
+
+      <div className="flex flex-wrap gap-10">
         {data.map((post) => (
-          <Card key={post._id} className="w-96">
-            <CardHeader>
-              <CardTitle>{post.title}</CardTitle>
-              <CardDescription>{post.subtitle}</CardDescription>
-            </CardHeader>
-            <CardContent>{post.excerpt}</CardContent>
+          <Card key={post._id} className="w-96 flex flex-col justify-between">
+            <div>
+              <CardHeader>
+                <CardTitle>{post.title}</CardTitle>
+                <CardDescription>{post.subtitle}</CardDescription>
+              </CardHeader>
+              <CardContent>{post.excerpt}</CardContent>
+            </div>
             <CardFooter>
               <Link href={`/blog/${post.slug}`}>
                 <Button variant="outline">Read more</Button>
