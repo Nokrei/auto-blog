@@ -1,5 +1,6 @@
 import "../globals.css";
 import { Navigation } from "./_components/navigation/Navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata = {
   title: "Auto Blog",
@@ -15,7 +16,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Navigation />
-        {children}
+        <>
+          {children}
+          <Toaster className="bg-background" />
+        </>
       </body>
     </html>
   );

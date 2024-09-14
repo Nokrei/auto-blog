@@ -14,25 +14,22 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export default function CreateNewPostPage() {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [summary, setSummary] = useState("");
   const [postContent, setPostContent] = useState("");
+  const [buttonText, setButtonText] = useState("Create post");
+  const [isLoading, setIsLoading] = useState(false);
 
   const publishedAt = new Date();
-  // const content = [
-  //   {
-  //     markDefs: [],
-  //     style: "normal",
-  //     _key: "1",
-  //     _type: "block",
-  //     children: [{ _type: "span", text: postContent }],
-  //   },
-  // ];
 
   async function handleCreatePostClick() {
+    setButtonText("Creating post...");
+    setIsLoading(true);
+    toast.loading("Creating post...");
     const response = await axios.post("/api/create-post", {
       title,
       subtitle,
@@ -40,7 +37,25 @@ export default function CreateNewPostPage() {
       publishedAt,
       content: postContent,
     });
-    console.log(response.data);
+    if (response.status === 200) {
+      toast.dismiss();
+      toast.success(`Post created successfully!`, {
+        action: {
+          label: "View post",
+          onClick: () => {
+            window.location.href = `/blog/${response.data}`;
+          },
+        },
+        duration: 10000,
+      });
+      setButtonText("Create another post");
+      setIsLoading(false);
+    }
+    if (response.status === 500) {
+      toast.error("Failed to create post");
+      setButtonText("Create post");
+      setIsLoading(false);
+    }
   }
   return (
     <main className="max-w-7xl mx-auto py-20 flex flex-col gap-10">
@@ -94,11 +109,13 @@ export default function CreateNewPostPage() {
         </CardContent>
         <CardFooter>
           <Button
-            disabled={!title || !subtitle || !summary || !postContent}
+            disabled={
+              !title || !subtitle || !summary || !postContent || isLoading
+            }
             onClick={() => handleCreatePostClick()}
             variant="outline"
           >
-            Create post
+            {buttonText}
           </Button>
         </CardFooter>
       </Card>

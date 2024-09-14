@@ -24,7 +24,8 @@ export async function POST(req: Request) {
       publishedAt,
       content: richTextContent,
     });
-    return new Response("Blog post created successfully", { status: 200 });
+    const postSlug = title.toLowerCase().replace(/\s/g, "-");
+    return new Response(postSlug, { status: 200 });
   } catch (error) {
     return new Response(
       `Failed to create blog post, error: ${JSON.stringify(error)}`,
