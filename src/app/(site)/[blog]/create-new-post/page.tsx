@@ -8,5 +8,5 @@ export default async function CreateNewPostPage() {
   }
   const userIsAdmin = user.privateMetadata.admin;
   const userId = user.id;
-  return <CreatePostForm userIsAdmin={userIsAdmin} userId={user.id} />;
+  return <CreatePostForm userIsAdmin={userIsAdmin} userId={userId} />;
 }
