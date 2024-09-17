@@ -16,17 +16,18 @@ export default async function BlogPostPage({ params }: PropsType) {
     tags: ["blogPost"],
     params,
   });
+  console.log(data.content[0].body[0].children);
 
   return (
     <main className="max-w-7xl mx-auto flex flex-col gap-20 py-20">
       <div className="flex flex-col gap-5 items-center justify-center text-center max-w-lg mx-auto">
-        <h1 className="text-5xl">{data.title}</h1>
+        {/* <h1 className="text-5xl">{data.title}</h1>
         <p className="text-xs">{data.publishedAt}</p>
-        <p>{data.excerpt}</p>
+        <p>{data.excerpt}</p> */}
       </div>
-      <div className="">
+      {/* <div className="">
         <PortableText value={data.content} />
-      </div>
+      </div> */}
     </main>
   );
 }

@@ -1,38 +1,35 @@
 import { client } from "@/sanity/lib/client";
 
 type PropsType = {
-  title: string;
-  subtitle: string;
-  excerpt: string;
-  publishedAt: Date;
-  content: unknown;
+  content: {
+    title: string;
+    subtitle: string;
+    summary: string;
+    content: unknown;
+  };
 };
 
-export async function sanityCreate({
-  title,
-  subtitle,
-  excerpt,
-  publishedAt,
-  content,
-}: PropsType) {
-  const postSlug = title.toLowerCase().replace(/\s/g, "-");
+export async function sanityCreate({ content }: PropsType) {
+  // const postSlug = content.title.toLowerCase().replace(/\s/g, "-");
   return client
     .create({
       _type: "blogPost",
-      title,
+      title: content.title,
       slug: {
         _type: "slug",
-        current: postSlug,
+        current: "jdhasjkdashkj",
       },
-      subtitle,
-      excerpt,
-      publishedAt,
-      content,
+      subtitle: content.subtitle,
+      excerpt: content.summary,
+      publishedAt: new Date(),
+      content: content.content,
     })
     .then((response) => {
       console.log(`Created blog post with ID: ${response._id}`);
     })
     .catch((error) => {
-      console.error(`Failed to create blog post: ${error.message}`);
+      console.error(
+        `Sanity Error: Failed to create blog post: ${error.message}`
+      );
     });
 }

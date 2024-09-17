@@ -7,14 +7,34 @@ export const generateBlogPost = async (prompt: string): Promise<string> => {
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant that writes blog posts.",
+          content: `You will be provided with a prompt to write a blog post.
+         Do not exceed 250 words.
+          Your response needs to be provided in JSON format.
+          The JSON object should contain the following properties:
+          - title: The title of the blog post
+          - subtitle: The subtitle of the blog post
+          - summary: A summary of the blog post (max 50 characters)
+          - content: content is to be an array of objects, each object representing a block of text in the blog post.
+           Each object should have the following properties:
+           sectionTitle: The title of the section
+           body: The body of the section.
+            The body should be an array of objects, each object containing:
+            markDefs: an empty array,
+            style: "normal",
+            _key: a unique key for the block,
+            _type: "block",
+            children: an array of objects, each object containing:
+            _type: "span",
+            text: the text for the block.
+            _key: a unique key.
+           `,
         },
         {
           role: "user",
           content: prompt, // The user's prompt
         },
       ],
-      max_tokens: 200, // Adjust the token count as needed
+      max_tokens: 1000, // Adjust the token count as needed
       temperature: 0.7, // Adjust for creativity
     });
 

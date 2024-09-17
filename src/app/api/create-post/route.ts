@@ -4,15 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   const request = await req.json();
-  const {
-    title,
-    subtitle,
-    summary,
-    publishedAt,
-    content,
-    userId,
-    userIsAdmin,
-  } = request;
+  const { content, userId, userIsAdmin } = request;
 
   const user = await currentUser();
   if (!user) {
@@ -28,30 +20,25 @@ export async function POST(req: Request) {
 
   const aiGeneratedContent = await generateBlogPost(content);
 
-  const richTextContent = [
-    {
-      markDefs: [],
-      style: "normal",
-      _key: "1",
-      _type: "block",
-      children: [{ _type: "span", text: aiGeneratedContent }],
-    },
-  ];
+  // const richTextContent = [
+  //   {
+  //     markDefs: [],
+  //     style: "normal",
+  //     _key: "1",
+  //     _type: "block",
+  //     children: [{ _type: "span", text: aiGeneratedContent }],
+  //   },
+  // ];
 
   try {
     await sanityCreate({
-      title,
-      subtitle,
-      excerpt: summary,
-      publishedAt,
-      content: richTextContent,
+      content: JSON.parse(aiGeneratedContent),
     });
-    const postSlug = title.toLowerCase().replace(/\s/g, "-");
+    const postSlug = "example123ff21312".replace(/\s/g, "-");
     return new Response(postSlug, { status: 200 });
   } catch (error) {
-    return new Response(
-      `Failed to create blog post, error: ${JSON.stringify(error)}`,
-      { status: 500 }
-    );
+    return new Response(`Failed to create blog post, error: ${error}`, {
+      status: 500,
+    });
   }
 }

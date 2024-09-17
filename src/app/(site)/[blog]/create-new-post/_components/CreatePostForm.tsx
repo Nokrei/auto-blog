@@ -39,10 +39,10 @@ export default function CreatePostForm({ userIsAdmin, userId }: PropsType) {
       .post("/api/create-post", {
         userIsAdmin,
         userId,
-        title,
-        subtitle,
-        summary,
-        publishedAt,
+        // title,
+        // subtitle,
+        // summary,
+        // publishedAt,
         content: postContent,
       })
       .then((response) => {
@@ -116,7 +116,7 @@ export default function CreatePostForm({ userIsAdmin, userId }: PropsType) {
             </div>
           </div>
           <div className="grid w-full  items-center gap-1.5">
-            <Label htmlFor="post-content">Post content</Label>
+            <Label htmlFor="post-content">Prompt</Label>
             <Textarea
               rows={10}
               onChange={(e) => setPostContent(e.target.value)}
@@ -128,9 +128,7 @@ export default function CreatePostForm({ userIsAdmin, userId }: PropsType) {
         <CardFooter>
           {userIsAdmin ? (
             <Button
-              disabled={
-                !title || !subtitle || !summary || !postContent || isLoading
-              }
+              disabled={!postContent || isLoading}
               onClick={() => handleCreatePostClick()}
               variant="outline"
             >

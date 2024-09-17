@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { client } from "@/sanity/lib/client";
 import { allBlogPostsQuery } from "@/sanity/lib/queries";
 import { sanityFetch } from "@/sanity/lib/sanityFetch";
 import { BlogPostType } from "@/types/BlogPostType";
@@ -18,9 +19,17 @@ export default async function AllBlogPostsPage() {
     tags: ["blogPost"],
   });
 
+  // const deleteAllPosts = async () => {
+  //   return client.delete({
+  //     query: `*[_type == "blogPost"]`,
+  //   });
+  // };
+  console.log(data);
+
   return (
     <main className="max-w-7xl flex flex-col mx-auto gap-10 py-20">
       <h1 className="text-center text-5xl">All Blog posts</h1>
+
       <div className="flex justify-center">
         <Link href="/blog/create-new-post">
           <Button variant="outline">Create new</Button>
