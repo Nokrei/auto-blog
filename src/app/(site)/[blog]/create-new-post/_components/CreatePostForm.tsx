@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
@@ -22,14 +21,9 @@ type PropsType = {
 };
 
 export default function CreatePostForm({ userIsAdmin, userId }: PropsType) {
-  const [title, setTitle] = useState("");
-  const [subtitle, setSubtitle] = useState("");
-  const [summary, setSummary] = useState("");
-  const [postContent, setPostContent] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [buttonText, setButtonText] = useState("Create post");
   const [isLoading, setIsLoading] = useState(false);
-
-  const publishedAt = new Date();
 
   async function handleCreatePostClick() {
     setButtonText("Creating post...");
@@ -39,11 +33,7 @@ export default function CreatePostForm({ userIsAdmin, userId }: PropsType) {
       .post("/api/create-post", {
         userIsAdmin,
         userId,
-        // title,
-        // subtitle,
-        // summary,
-        // publishedAt,
-        content: postContent,
+        prompt,
       })
       .then((response) => {
         if (response.status === 200) {
@@ -86,49 +76,21 @@ export default function CreatePostForm({ userIsAdmin, userId }: PropsType) {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-10">
-          <div className="flex gap-10">
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="post-title">Post title</Label>
-              <Input
-                onChange={(e) => setTitle(e.target.value)}
-                type="text"
-                id="post-title"
-                placeholder="My post title"
-              />
-            </div>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="post-subtitle">Post subtitle</Label>
-              <Input
-                onChange={(e) => setSubtitle(e.target.value)}
-                type="text"
-                id="post-subtitle"
-                placeholder="My post subtitle"
-              />
-            </div>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="post-summary">Post summary</Label>
-              <Input
-                onChange={(e) => setSummary(e.target.value)}
-                type="text"
-                id="post-summary"
-                placeholder="My post summary"
-              />
-            </div>
-          </div>
+          <div className="flex gap-10"></div>
           <div className="grid w-full  items-center gap-1.5">
-            <Label htmlFor="post-content">Prompt</Label>
+            <Label htmlFor="prompt">Prompt</Label>
             <Textarea
               rows={10}
-              onChange={(e) => setPostContent(e.target.value)}
-              id="post-content"
-              placeholder="My post content"
+              onChange={(e) => setPrompt(e.target.value)}
+              id="prompt"
+              placeholder="Write your prompt here..."
             />
           </div>
         </CardContent>
         <CardFooter>
           {userIsAdmin ? (
             <Button
-              disabled={!postContent || isLoading}
+              disabled={!prompt || isLoading}
               onClick={() => handleCreatePostClick()}
               variant="outline"
             >

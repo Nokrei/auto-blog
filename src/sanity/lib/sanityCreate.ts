@@ -1,7 +1,8 @@
 import { client } from "@/sanity/lib/client";
+import getSlug from "speakingurl";
 
 type PropsType = {
-  content: {
+  aiGeneratedPayload: {
     title: string;
     subtitle: string;
     summary: string;
@@ -9,20 +10,25 @@ type PropsType = {
   };
 };
 
-export async function sanityCreate({ content }: PropsType) {
-  // const postSlug = content.title.toLowerCase().replace(/\s/g, "-");
+export async function sanityCreate({ aiGeneratedPayload }: PropsType) {
   return client
     .create({
       _type: "blogPost",
-      title: content.title,
+      title: aiGeneratedPayload.title,
       slug: {
         _type: "slug",
-        current: "jdhasjkdashkj",
+        current: getSlug(aiGeneratedPayload.title, {
+          separator: "-",
+          symbols: false,
+          lang: "en",
+          mark: false,
+          truncate: 60,
+        }),
       },
-      subtitle: content.subtitle,
-      excerpt: content.summary,
+      subtitle: aiGeneratedPayload.subtitle,
+      excerpt: aiGeneratedPayload.summary,
       publishedAt: new Date(),
-      content: content.content,
+      content: aiGeneratedPayload.content,
     })
     .then((response) => {
       console.log(`Created blog post with ID: ${response._id}`);

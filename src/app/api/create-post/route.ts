@@ -1,10 +1,17 @@
 import { generateBlogPost } from "@/lib/generateContent";
 import { sanityCreate } from "@/sanity/lib/sanityCreate";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
+import getSlug from "speakingurl";
 
 export async function POST(req: Request) {
   const request = await req.json();
-  const { content, userId, userIsAdmin } = request;
+  const {
+    prompt,
+    userId,
+    userIsAdmin,
+  }: { prompt: string; userId: string; userIsAdmin: boolean | unknown } =
+    request;
 
   const user = await currentUser();
   if (!user) {
@@ -18,23 +25,21 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const aiGeneratedContent = await generateBlogPost(content);
-
-  // const richTextContent = [
-  //   {
-  //     markDefs: [],
-  //     style: "normal",
-  //     _key: "1",
-  //     _type: "block",
-  //     children: [{ _type: "span", text: aiGeneratedContent }],
-  //   },
-  // ];
+  const aiGeneratedContent = await generateBlogPost(prompt);
+  const parsedContent = JSON.parse(aiGeneratedContent);
 
   try {
     await sanityCreate({
-      content: JSON.parse(aiGeneratedContent),
+      aiGeneratedPayload: JSON.parse(aiGeneratedContent),
     });
-    const postSlug = "example123ff21312".replace(/\s/g, "-");
+    const postSlug = getSlug(parsedContent.title, {
+      separator: "-",
+      symbols: false,
+      lang: "en",
+      mark: false,
+      truncate: 60,
+    });
+    revalidatePath("/blog");
     return new Response(postSlug, { status: 200 });
   } catch (error) {
     return new Response(`Failed to create blog post, error: ${error}`, {

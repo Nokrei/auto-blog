@@ -7,5 +7,9 @@ export type BlogPostType = {
   slug: string;
   publishedAt: string;
   excerpt: string;
-  content: PortableTextBlock;
+  content: {
+    sectionTitle: string;
+    body: PortableTextBlock;
+    _key: string;
+  }[];
 };
