@@ -9,7 +9,6 @@ export default function ThemeSwitcher() {
   const [isClient, setIsClient] = useState(false);
   function handleThmeSwitch() {
     setTheme(theme === "dark" ? "light" : "dark");
-    console.log(theme);
   }
   useEffect(() => {
     setIsClient(true);
