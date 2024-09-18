@@ -4,6 +4,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import getSlug from "speakingurl";
 
+export const maxDuration = process.env.MAX_FUNCTION_DURATION;
+
 export async function POST(req: Request) {
   const request = await req.json();
   const {
