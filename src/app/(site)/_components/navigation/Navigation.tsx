@@ -38,7 +38,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export function Navigation() {
   return (
-    <div className="flex z-50 items-center px-5 fixed w-full bg-gradient-to-b from-zinc-900 to-transparent">
+    <div className="flex justify-between z-50 items-center px-5 fixed w-full bg-gradient-to-b from-zinc-900 to-transparent">
       <NavigationMenu className="mx-auto rounded-xl my-5 md:ps-36">
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -98,7 +98,7 @@ export function Navigation() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <div className="flex gap-5 w-36">
+      <div className="flex gap-5 md:w-36">
         <ThemeSwitcher />
         <SignedOut>
           <SignInButton />

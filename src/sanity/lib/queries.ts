@@ -17,8 +17,36 @@ export const blogPostQuery = groq`
      title,
      subtitle,
      slug,
+     "author": author->{
+          name,
+          writingStyle,
+          styleModifier,
+          "avatar": avatar.asset->url,
+     },
      publishedAt,
      excerpt,
      content,
  }
  `;
+
+export const allAuthorsQuery = groq`
+  *[_type == "author"]{
+      _id,
+      name,
+      writingStyle,
+      styleModifier,
+      "avatar": avatar.asset->url,
+      "alt": avatar.alt,
+  }
+  `;
+
+export const authorQuery = groq`
+  *[_type == "author" && _id == $id][0]{
+      _id,
+      name,
+      writingStyle,
+      styleModifier,
+      "avatar": avatar.asset->url,
+      "alt": avatar.alt,
+  }
+  `;

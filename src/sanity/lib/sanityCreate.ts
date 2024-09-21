@@ -7,6 +7,10 @@ type PropsType = {
     subtitle: string;
     summary: string;
     content: unknown;
+    author: {
+      _ref: string;
+      _type: "reference";
+    };
   };
 };
 
@@ -27,6 +31,10 @@ export async function sanityCreate({ aiGeneratedPayload }: PropsType) {
       },
       subtitle: aiGeneratedPayload.subtitle,
       excerpt: aiGeneratedPayload.summary,
+      author: {
+        _type: "reference",
+        _ref: aiGeneratedPayload.author._ref,
+      },
       publishedAt: new Date(),
       content: aiGeneratedPayload.content,
     })

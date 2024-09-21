@@ -19,7 +19,7 @@ export default async function AllBlogPostsPage() {
   });
 
   return (
-    <main className="max-w-7xl flex flex-col mx-auto gap-10 py-20">
+    <main className="max-w-7xl flex flex-col mx-auto gap-10 py-32">
       <h1 className="text-center text-5xl">All Blog posts</h1>
 
       <div className="flex justify-center">

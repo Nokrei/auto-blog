@@ -16,7 +16,11 @@ export default function ThemeSwitcher() {
   return (
     <>
       {isClient && (
-        <Button onClick={() => handleThmeSwitch()} variant={"secondary"}>
+        <Button
+          onClick={() => handleThmeSwitch()}
+          variant={"secondary"}
+          className="hidden md:block"
+        >
           {theme === "dark" ? "Light" : "Dark"}
         </Button>
       )}

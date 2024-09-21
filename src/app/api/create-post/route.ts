@@ -12,8 +12,13 @@ export async function POST(req: Request) {
     prompt,
     userId,
     userIsAdmin,
-  }: { prompt: string; userId: string; userIsAdmin: boolean | unknown } =
-    request;
+    selectedAuthorId,
+  }: {
+    prompt: string;
+    userId: string;
+    userIsAdmin: boolean | unknown;
+    selectedAuthorId: string;
+  } = request;
 
   const user = await currentUser();
   if (!user) {
@@ -27,7 +32,7 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const aiGeneratedContent = await generateBlogPost(prompt);
+  const aiGeneratedContent = await generateBlogPost(prompt, selectedAuthorId);
   const parsedContent = JSON.parse(aiGeneratedContent);
 
   try {
