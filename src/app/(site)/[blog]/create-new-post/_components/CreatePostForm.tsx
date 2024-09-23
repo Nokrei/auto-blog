@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AuthorType } from "@/types/AuthorType";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
 
 type PropsType = {
   userIsAdmin: boolean | unknown;
@@ -30,6 +31,7 @@ export default function CreatePostForm({
   authors,
 }: PropsType) {
   const [isClient, setIsClient] = useState(false);
+  const [imageKeywords, setImageKeywords] = useState("");
   const [prompt, setPrompt] = useState("");
   const [buttonText, setButtonText] = useState("Create post");
   const [isLoading, setIsLoading] = useState(false);
@@ -38,43 +40,62 @@ export default function CreatePostForm({
   async function handleCreatePostClick() {
     setButtonText("Creating post...");
     setIsLoading(true);
-    toast.loading("Creating post...");
+    toast.loading("Getting image...");
     await axios
-      .post("/api/create-post", {
-        userIsAdmin,
+      .post("/api/get-pixbay-image", {
         userId,
-        prompt,
-        selectedAuthorId,
+        userIsAdmin,
+        imageKeywords,
       })
       .then((response) => {
         if (response.status === 200) {
-          toast.dismiss();
-          toast.success(`Post created successfully!`, {
-            action: {
-              label: "View post",
-              onClick: () => {
-                window.location.href = `/blog/${response.data}`;
-              },
-            },
-            duration: 10000,
-          });
-          setButtonText("Create another post");
-          setIsLoading(false);
-        }
-        if (response.status === 500) {
-          toast.dismiss();
-          toast.error("Failed to create post");
-          setButtonText("Create post");
-          setIsLoading(false);
+          toast.loading("Creating post...");
         }
       })
       .catch((error) => {
         toast.dismiss();
         console.error(error);
-        toast.error(`Failed to create post: ${error.response.data}`);
+        toast.error(`Failed to get image`);
         setButtonText("Create post");
         setIsLoading(false);
       });
+    // toast.loading("Creating post...");
+    // await axios
+    //   .post("/api/create-post", {
+    //     userIsAdmin,
+    //     userId,
+    //     prompt,
+    //     selectedAuthorId,
+    //   })
+    //   .then((response) => {
+    //     if (response.status === 200) {
+    //       toast.dismiss();
+    //       toast.success(`Post created successfully!`, {
+    //         action: {
+    //           label: "View post",
+    //           onClick: () => {
+    //             window.location.href = `/blog/${response.data}`;
+    //           },
+    //         },
+    //         duration: 10000,
+    //       });
+    //       setButtonText("Create another post");
+    //       setIsLoading(false);
+    //     }
+    //     if (response.status === 500) {
+    //       toast.dismiss();
+    //       toast.error("Failed to create post");
+    //       setButtonText("Create post");
+    //       setIsLoading(false);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     toast.dismiss();
+    //     console.error(error);
+    //     toast.error(`Failed to create post: ${error.response.data}`);
+    //     setButtonText("Create post");
+    //     setIsLoading(false);
+    //   });
   }
 
   useEffect(() => {
@@ -137,7 +158,14 @@ export default function CreatePostForm({
                   ))}
                 </RadioGroup>
               </div>
-
+              <div>
+                <Label htmlFor="imageKeywords">Image Keywords</Label>
+                <Input
+                  onChange={(e) => setImageKeywords(e.target.value)}
+                  id="imageKeywords"
+                  placeholder="Enter image keywords"
+                />
+              </div>
               <div className="grid w-full  items-center gap-2">
                 <Label htmlFor="prompt">Prompt</Label>
                 <Textarea

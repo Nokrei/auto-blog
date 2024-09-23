@@ -13,7 +13,6 @@ export default async function CreateNewPostPage() {
     query: allAuthorsQuery,
     tags: ["author"],
   });
-  console.log(allAuthorData);
 
   const userIsAdmin = user.privateMetadata.admin;
   const userId = user.id;

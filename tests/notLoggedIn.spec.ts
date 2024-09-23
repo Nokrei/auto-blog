@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 
 test("test", async ({ page }) => {
+  await page.goto("/");
   await page.getByRole("link", { name: "Example" }).click();
   await page
     .getByRole("link", { name: "AB Auto Blog A platform that" })
