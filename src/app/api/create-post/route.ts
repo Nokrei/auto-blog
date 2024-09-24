@@ -13,11 +13,13 @@ export async function POST(req: Request) {
     userId,
     userIsAdmin,
     selectedAuthorId,
+    imageIdInSanity,
   }: {
     prompt: string;
     userId: string;
     userIsAdmin: boolean | unknown;
     selectedAuthorId: string;
+    imageIdInSanity: string;
   } = request;
 
   const user = await currentUser();
@@ -38,6 +40,7 @@ export async function POST(req: Request) {
   try {
     await sanityCreate({
       aiGeneratedPayload: JSON.parse(aiGeneratedContent),
+      mainImageId: imageIdInSanity,
     });
     const postSlug = getSlug(parsedContent.title, {
       separator: "-",

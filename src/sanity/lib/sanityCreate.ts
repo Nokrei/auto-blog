@@ -12,12 +12,25 @@ type PropsType = {
       _type: "reference";
     };
   };
+  mainImageId: string;
 };
 
-export async function sanityCreate({ aiGeneratedPayload }: PropsType) {
+export async function sanityCreate({
+  aiGeneratedPayload,
+  mainImageId,
+}: PropsType) {
+  console.log(`Main image ID: ${mainImageId}`);
+
   return client
     .create({
       _type: "blogPost",
+      mainImage: {
+        _type: "image",
+        asset: {
+          _type: "reference",
+          _ref: mainImageId,
+        },
+      },
       title: aiGeneratedPayload.title,
       slug: {
         _type: "slug",

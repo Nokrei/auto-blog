@@ -6,6 +6,20 @@ export const blogPost = defineType({
   type: "document",
   fields: [
     defineField({
+      name: "mainImage",
+      type: "image",
+      title: "Main Image",
+      fields: [
+        defineField({
+          name: "alt",
+          type: "string",
+          title: "Alt Text",
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "title",
       title: "Title",
       type: "string",

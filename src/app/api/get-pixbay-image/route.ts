@@ -31,12 +31,12 @@ export async function POST(req: Request) {
     const response = await axios.get(
       `https://pixabay.com/api/?key=${process.env.PIAXBAY_API_KEY}&q=${imageKeywords}&image_type=photo`
     );
-    console.log(response.data.hits[0].webformatURL);
+    console.log(`Pixbay: ${response.data.hits[0].webformatURL}`);
 
-    return new Response("Image fetched", { status: 200 });
+    return new Response(response.data.hits[0].webformatURL, { status: 200 });
   } catch (error) {
-    console.log(error.message);
-    return new Response(`Failed to get image, error: ${error}`, {
+    console.log(error);
+    return new Response(`Failed to get image`, {
       status: 500,
     });
   }

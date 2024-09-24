@@ -36,29 +36,84 @@ export default function CreatePostForm({
   const [buttonText, setButtonText] = useState("Create post");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAuthorId, setSelectedAuthorId] = useState(authors[0]._id);
+  const [imageUrlFromPixbay, setImageUrlFromPixbay] = useState("");
+  const [imageIdInSanity, setImageIdInSanity] = useState("");
 
   async function handleCreatePostClick() {
     setButtonText("Creating post...");
     setIsLoading(true);
-    toast.loading("Getting image...");
-    await axios
-      .post("/api/get-pixbay-image", {
+
+    try {
+      toast.loading("Getting image...");
+      const response = await axios.post("/api/get-pixbay-image", {
         userId,
         userIsAdmin,
         imageKeywords,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          toast.loading("Creating post...");
-        }
-      })
-      .catch((error) => {
+      });
+      if (response.status === 200) {
+        setImageUrlFromPixbay(response.data);
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error(error);
+      toast.error(`Failed to get image`);
+      setButtonText("Create post");
+      setIsLoading(false);
+    }
+    try {
+      toast.loading("Uploading image...");
+      const response = await axios.post("/api/upload-image", {
+        imageUrl: imageUrlFromPixbay,
+        imageName: imageKeywords,
+      });
+      if (response.status === 200) {
+        setImageIdInSanity(response.data);
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error(error);
+      toast.error(`Failed to upload image`);
+      setButtonText("Create post");
+      setIsLoading(false);
+    }
+    try {
+      toast.loading("Creating post...");
+      const response = await axios.post("/api/create-post", {
+        userIsAdmin,
+        userId,
+        prompt,
+        selectedAuthorId,
+        imageUrlFromPixbay,
+        imageIdInSanity,
+      });
+      if (response.status === 200) {
         toast.dismiss();
-        console.error(error);
-        toast.error(`Failed to get image`);
+        toast.success(`Post created successfully!`, {
+          action: {
+            label: "View post",
+            onClick: () => {
+              window.location.href = `/blog/${response.data}`;
+            },
+          },
+          duration: 10000,
+        });
+        setButtonText("Create another post");
+        setIsLoading(false);
+      }
+      if (response.status === 500) {
+        toast.dismiss();
+        toast.error("Failed to create post");
         setButtonText("Create post");
         setIsLoading(false);
-      });
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error(error);
+      toast.error(`Failed to create post`);
+      setButtonText("Create post");
+      setIsLoading(false);
+    }
+
     // toast.loading("Creating post...");
     // await axios
     //   .post("/api/create-post", {
