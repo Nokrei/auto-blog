@@ -30,6 +30,7 @@ export async function sanityCreate({
           _type: "reference",
           _ref: mainImageId,
         },
+        alt: aiGeneratedPayload.title,
       },
       title: aiGeneratedPayload.title,
       slug: {

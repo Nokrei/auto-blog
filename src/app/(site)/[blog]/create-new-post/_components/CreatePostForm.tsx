@@ -36,46 +36,46 @@ export default function CreatePostForm({
   const [buttonText, setButtonText] = useState("Create post");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAuthorId, setSelectedAuthorId] = useState(authors[0]._id);
-  const [imageUrlFromPixbay, setImageUrlFromPixbay] = useState("");
-  const [imageIdInSanity, setImageIdInSanity] = useState("");
+  // const [imageUrlFromPixbay, setImageUrlFromPixbay] = useState("");
+  // const [imageIdInSanity, setImageIdInSanity] = useState("");
 
   async function handleCreatePostClick() {
     setButtonText("Creating post...");
     setIsLoading(true);
 
-    try {
-      toast.loading("Getting image...");
-      const response = await axios.post("/api/get-pixbay-image", {
-        userId,
-        userIsAdmin,
-        imageKeywords,
-      });
-      if (response.status === 200) {
-        setImageUrlFromPixbay(response.data);
-      }
-    } catch (error) {
-      toast.dismiss();
-      console.error(error);
-      toast.error(`Failed to get image`);
-      setButtonText("Create post");
-      setIsLoading(false);
-    }
-    try {
-      toast.loading("Uploading image...");
-      const response = await axios.post("/api/upload-image", {
-        imageUrl: imageUrlFromPixbay,
-        imageName: imageKeywords,
-      });
-      if (response.status === 200) {
-        setImageIdInSanity(response.data);
-      }
-    } catch (error) {
-      toast.dismiss();
-      console.error(error);
-      toast.error(`Failed to upload image`);
-      setButtonText("Create post");
-      setIsLoading(false);
-    }
+    // try {
+    //   toast.loading("Getting image...");
+    //   const response = await axios.post("/api/get-pixbay-image", {
+    //     userId,
+    //     userIsAdmin,
+    //     imageKeywords,
+    //   });
+    //   if (response.status === 200) {
+    //     setImageUrlFromPixbay(response.data);
+    //   }
+    // } catch (error) {
+    //   toast.dismiss();
+    //   console.error(error);
+    //   toast.error(`Failed to get image`);
+    //   setButtonText("Create post");
+    //   setIsLoading(false);
+    // }
+    // try {
+    //   toast.loading("Uploading image...");
+    //   const response = await axios.post("/api/upload-image", {
+    //     imageUrl: imageUrlFromPixbay,
+    //     imageName: imageKeywords,
+    //   });
+    //   if (response.status === 200) {
+    //     setImageIdInSanity(response.data);
+    //   }
+    // } catch (error) {
+    //   toast.dismiss();
+    //   console.error(error);
+    //   toast.error(`Failed to upload image`);
+    //   setButtonText("Create post");
+    //   setIsLoading(false);
+    // }
     try {
       toast.loading("Creating post...");
       const response = await axios.post("/api/create-post", {
@@ -83,8 +83,9 @@ export default function CreatePostForm({
         userId,
         prompt,
         selectedAuthorId,
-        imageUrlFromPixbay,
-        imageIdInSanity,
+        // imageUrlFromPixbay,
+        // imageIdInSanity,
+        imageKeywords,
       });
       if (response.status === 200) {
         toast.dismiss();

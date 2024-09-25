@@ -21,6 +21,19 @@ export default async function BlogPostPage({ params }: PropsType) {
 
   return (
     <main className="max-w-7xl mx-auto flex flex-col gap-20 py-32">
+      {data.mainImage && (
+        <div className="relative w-full h-96">
+          <Image
+            src={data.mainImage}
+            alt={data.mainImageAlt}
+            layout="fill"
+            objectFit="contain"
+            placeholder="blur"
+            blurDataURL={data.mainImage}
+          />
+        </div>
+      )}
+
       <div className="flex flex-col gap-5 items-center justify-center text-center max-w-lg mx-auto">
         <p className="text-sm">
           {new Date(data.publishedAt).toLocaleDateString("en-gb", {

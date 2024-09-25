@@ -14,4 +14,6 @@ export type BlogPostType = {
     body: PortableTextBlock;
     _key: string;
   }[];
+  mainImage: string;
+  mainImageAlt: string;
 };
