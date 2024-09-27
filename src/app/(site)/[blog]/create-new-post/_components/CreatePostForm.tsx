@@ -36,64 +36,65 @@ export default function CreatePostForm({
   const [buttonText, setButtonText] = useState("Create post");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAuthorId, setSelectedAuthorId] = useState(authors[0]._id);
-  // const [imageUrlFromPixbay, setImageUrlFromPixbay] = useState("");
-  // const [imageIdInSanity, setImageIdInSanity] = useState("");
 
   async function handleCreatePostClick() {
     setButtonText("Creating post...");
     setIsLoading(true);
-
-    // try {
-    //   toast.loading("Getting image...");
-    //   const response = await axios.post("/api/get-pixbay-image", {
-    //     userId,
-    //     userIsAdmin,
-    //     imageKeywords,
-    //   });
-    //   if (response.status === 200) {
-    //     setImageUrlFromPixbay(response.data);
-    //   }
-    // } catch (error) {
-    //   toast.dismiss();
-    //   console.error(error);
-    //   toast.error(`Failed to get image`);
-    //   setButtonText("Create post");
-    //   setIsLoading(false);
-    // }
-    // try {
-    //   toast.loading("Uploading image...");
-    //   const response = await axios.post("/api/upload-image", {
-    //     imageUrl: imageUrlFromPixbay,
-    //     imageName: imageKeywords,
-    //   });
-    //   if (response.status === 200) {
-    //     setImageIdInSanity(response.data);
-    //   }
-    // } catch (error) {
-    //   toast.dismiss();
-    //   console.error(error);
-    //   toast.error(`Failed to upload image`);
-    //   setButtonText("Create post");
-    //   setIsLoading(false);
-    // }
+    toast.loading(`Searching for image...`);
     try {
-      toast.loading("Creating post...");
-      const response = await axios.post("/api/create-post", {
+      // Send keywords to Pixbay API, get image URL in pixabay.
+      const pixabayResponse = await axios.post("/api/get-pixbay-image", {
+        userId,
+        userIsAdmin,
+        imageKeywords,
+      });
+      toast.dismiss();
+      if (pixabayResponse.status === 200) {
+        toast.loading(`Image found! Uploading to Sanity...`);
+      }
+      if (pixabayResponse.status === 500) {
+        toast.error("Failed to get image");
+        setButtonText("Create post");
+        setIsLoading(false);
+        return;
+      }
+      const imageUrlFromPixbay = pixabayResponse.data;
+
+      // Upload image to Sanity, get image ID in Sanity.
+      const sanityUploadResponse = await axios.post("/api/upload-image", {
+        userId,
+        userIsAdmin,
+        imageUrl: imageUrlFromPixbay,
+        imageName: imageKeywords,
+      });
+      toast.dismiss();
+      if (sanityUploadResponse.status === 200) {
+        toast.loading(`Image uploaded to Sanity! Creating post...`);
+      }
+      if (sanityUploadResponse.status === 500) {
+        toast.error("Failed to upload image");
+        setButtonText("Create post");
+        setIsLoading(false);
+        return;
+      }
+
+      const imageIdInSanity = sanityUploadResponse.data;
+
+      // Generate blog post with AI, send blog post to Sanity with image ID.
+      const createPostResponse = await axios.post("/api/create-post", {
         userIsAdmin,
         userId,
         prompt,
         selectedAuthorId,
-        // imageUrlFromPixbay,
-        // imageIdInSanity,
-        imageKeywords,
+        imageIdInSanity,
       });
-      if (response.status === 200) {
+      if (createPostResponse.status === 200) {
         toast.dismiss();
         toast.success(`Post created successfully!`, {
           action: {
             label: "View post",
             onClick: () => {
-              window.location.href = `/blog/${response.data}`;
+              window.location.href = `/blog/${createPostResponse.data}`;
             },
           },
           duration: 10000,
@@ -101,7 +102,7 @@ export default function CreatePostForm({
         setButtonText("Create another post");
         setIsLoading(false);
       }
-      if (response.status === 500) {
+      if (createPostResponse.status === 500) {
         toast.dismiss();
         toast.error("Failed to create post");
         setButtonText("Create post");
@@ -114,44 +115,6 @@ export default function CreatePostForm({
       setButtonText("Create post");
       setIsLoading(false);
     }
-
-    // toast.loading("Creating post...");
-    // await axios
-    //   .post("/api/create-post", {
-    //     userIsAdmin,
-    //     userId,
-    //     prompt,
-    //     selectedAuthorId,
-    //   })
-    //   .then((response) => {
-    //     if (response.status === 200) {
-    //       toast.dismiss();
-    //       toast.success(`Post created successfully!`, {
-    //         action: {
-    //           label: "View post",
-    //           onClick: () => {
-    //             window.location.href = `/blog/${response.data}`;
-    //           },
-    //         },
-    //         duration: 10000,
-    //       });
-    //       setButtonText("Create another post");
-    //       setIsLoading(false);
-    //     }
-    //     if (response.status === 500) {
-    //       toast.dismiss();
-    //       toast.error("Failed to create post");
-    //       setButtonText("Create post");
-    //       setIsLoading(false);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     toast.dismiss();
-    //     console.error(error);
-    //     toast.error(`Failed to create post: ${error.response.data}`);
-    //     setButtonText("Create post");
-    //     setIsLoading(false);
-    //   });
   }
 
   useEffect(() => {
